@@ -170,6 +170,25 @@ body {
   padding-right: 2rem; */
 }
 
+/* Container Tableau Flexbox */
+.containerTableau {
+  background-image: url("../y.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  /* border: 5px solid #333; */
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.containerTableau .tableauPlaceholder {
+  width: 100%;
+  margin: auto;
+}
+
 /* COBA COBA SECTION WAVE */
 .wave {
   position: absolute;
