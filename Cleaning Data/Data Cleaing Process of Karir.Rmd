@@ -1,0 +1,295 @@
+```{r Reading the Data}
+df <- read.csv("D:/Farras's Onedrive/OneDrive - kimia02/Work/Magang Tracer Study ITB/Tableau/Week 2/half_clean_tracer_datas.csv")
+```
+
+```{r Installing Needed Library}
+if (!require(lubridate)) {
+  install.packages("lubridate")
+  library(lubridate)
+}
+```
+
+
+```{r See the summary}
+summary(df)
+```
+```{r Checking Duplicate}
+# Check for duplicate rows in the df DataFrame
+duplicate_rows <- duplicated(df)
+
+# Count the number of duplicate rows
+num_duplicates <- sum(duplicate_rows)
+cat("Number of duplicate rows:", num_duplicates, "\n")
+```
+
+
+```{r Outlier - jobseek before}
+# Jobseek Before Graduate
+## Calculating how many outlier
+boxplot(df$start_jobseek_before, main="Boxplot of start_jobseek_before")
+## Calculate Z-scores
+z_scores <- scale(df$start_jobseek_before)
+## Set a threshold for identifying outliers (e.g., 2 or 3 standard deviations)
+threshold <- 2
+## Identify outliers
+outliers <- which(abs(z_scores) > threshold)
+## Count the number of outliers
+num_outliers <- length(outliers)
+## Calculate the total number of data points
+total_data_points <- nrow(df)
+## Print the results
+cat("Total data points:", total_data_points, "\n")
+cat("Number of outliers:", num_outliers, "\n")
+
+## Create a histogram
+hist(df$start_jobseek_before, main="Histogram of start_jobseek_before", xlab="Values")
+## Catatan: Gunakan nilai MEDIAN karena datanya memiliki tail positif
+```
+
+```{r Outlier - Jobseek After Graduate}
+# Jobseek after Graduate
+## Calculating how many outlier
+boxplot(df$start_jobseek_after, main="Boxplot of start_jobseek_after")
+## Calculate Z-scores
+z_scores <- scale(df$start_jobseek_after)
+## Set a threshold for identifying outliers (e.g., 2 or 3 standard deviations)
+threshold <- 2
+## Identify outliers
+outliers <- which(abs(z_scores) > threshold)
+## Count the number of outliers
+num_outliers <- length(outliers)
+## Calculate the total number of data points
+total_data_points <- nrow(df)
+## Print the results
+cat("Total data points:", total_data_points, "\n")
+cat("Number of outliers:", num_outliers, "\n")
+
+## Create a histogram
+hist(df$start_jobseek_after, main="Histogram of start_jobseek_after", xlab="Values")
+```
+
+```{r Outlier - Company before Work}
+# Howmany company before work
+## Calculating how many outlier
+boxplot(df$jobseek_n, main="Boxplot of jobseek_n")
+## Calculate Z-scores
+z_scores <- scale(df$jobseek_n)
+## Set a threshold for identifying outliers (e.g., 2 or 3 standard deviations)
+threshold <- 2
+## Identify outliers
+outliers <- which(abs(z_scores) > threshold)
+## Count the number of outliers
+num_outliers <- length(outliers)
+## Calculate the total number of data points
+total_data_points <- nrow(df)
+## Print the results
+cat("Total data points:", total_data_points, "\n")
+cat("Number of outliers:", num_outliers, "\n")
+
+## Create a histogram
+hist(df$jobseek_n, main="Histogram of jobseek_n", xlab="Values")
+summary(df$jobseek_n)
+```
+
+```{r Outlier - First Job Before Graduate}
+# First Job before graduate (in month)
+## Calculating how many outlier
+boxplot(df$waktu_sebelum_lulus, main="Boxplot of waktu_sebelum_lulus")
+## Calculate Z-scores
+z_scores <- scale(df$waktu_sebelum_lulus)
+## Set a threshold for identifying outliers (e.g., 2 or 3 standard deviations)
+threshold <- 2
+## Identify outliers
+outliers <- which(abs(z_scores) > threshold)
+## Count the number of outliers
+num_outliers <- length(outliers)
+## Calculate the total number of data points
+total_data_points <- nrow(df)
+## Print the results
+cat("Total data points:", total_data_points, "\n")
+cat("Number of outliers:", num_outliers, "\n")
+
+## Create a histogram
+hist(df$waktu_sebelum_lulus, main="Histogram of waktu_sebelum_lulus", xlab="Values")
+```
+
+```{r Outlier - First Job After Graduate}
+# First Job after graduate (in month)
+## Calculating how many outlier
+boxplot(df$waktu_setelah_lulus, main="Boxplot of waktu_setelah_lulus")
+## Calculate Z-scores
+z_scores <- scale(df$waktu_setelah_lulus)
+## Set a threshold for identifying outliers (e.g., 2 or 3 standard deviations)
+threshold <- 2
+## Identify outliers
+outliers <- which(abs(z_scores) > threshold)
+## Count the number of outliers
+num_outliers <- length(outliers)
+## Calculate the total number of data points
+total_data_points <- nrow(df)
+## Print the results
+cat("Total data points:", total_data_points, "\n")
+cat("Number of outliers:", num_outliers, "\n")
+
+## Create a histogram
+hist(df$waktu_setelah_lulus, main="Histogram of waktu_setelah_lulus", xlab="Values")
+```
+
+```{r Outlier - Total Company since graduation}
+# Total Company after graduation (in month)
+## Calculating how many outlier
+boxplot(df$experience_n, main="Boxplot of experience_n")
+## Calculate Z-scores
+z_scores <- scale(df$experience_n)
+## Set a threshold for identifying outliers (e.g., 2 or 3 standard deviations)
+threshold <- 2
+## Identify outliers
+outliers <- which(abs(z_scores) > threshold)
+## Count the number of outliers
+num_outliers <- length(outliers)
+## Calculate the total number of data points
+total_data_points <- nrow(df)
+## Print the results
+cat("Total data points:", total_data_points, "\n")
+cat("Number of outliers:", num_outliers, "\n")
+
+## Create a histogram
+hist(df$experience_n, main="Histogram of experience_n", xlab="Values")
+summary(df$experience_n)
+
+## Checking anomaly of the data
+### Calculate the experience (years since starting the job)
+df_experience <- df
+df_experience$experience_f <- df$year_of_survey - df$angkatan
+### Define the maximum allowable job changes per year
+max_job_changes_per_year <- 4
+### Create a logical vector to identify anomalies
+is_anomaly <- df_experience$experience_n > (4 * df_experience$experience_f)
+### Create a new DataFrame with only the relevant columns for anomalies
+df_anomaly_experience_n <- df_experience[is_anomaly & !is.na(df_experience$experience_n), c("year_of_survey","angkatan", "nim", "nama", "experience_n")]
+### View the new DataFrame with anomalies and without NA in experience_n
+View(df_anomaly_experience_n)
+# Write the DataFrame to a CSV file
+write.csv(df_anomaly_experience_n, file = "D:/Farras's Onedrive/OneDrive - kimia02/Work/Magang Tracer Study ITB/Tableau/Week 1/anomaly_experience_n.csv", row.names = FALSE)
+```
+
+```{r Outlier - Total Workhour}
+# Total Workhour
+## Anomaly of under 10 hour workhour
+### Filter the df_workhour DataFrame based on conditions
+df_workhour <- df
+df_workhour_anomaly_10hour <- df_workhour[!is.na(df_workhour$workhour) &
+                                           df_workhour$workhour > -10 & df_workhour$workhour < 10 & 
+                                           df_workhour$posisi_bekerja != "magang" &
+                                           df_workhour$pekerjaan_utama == "bekerja", 
+                                           c("year_of_survey", "nim", "nama", "workhour")]
+
+# View the new DataFrame df_workhour_anomaly_10hour
+View(df_workhour_anomaly_10hour)
+# Write the DataFrame to a CSV file
+write.csv(df_workhour_anomaly_10hour, file = "D:/Farras's Onedrive/OneDrive - kimia02/Work/Magang Tracer Study ITB/Tableau/Week 1/Workhour_anomaly_10hour.csv", row.names = FALSE)
+
+## Anomaly of above 60 hour workhour
+### Filter the df_workhour DataFrame based on conditions
+df_workhour <- df
+df_workhour_anomaly_60hour <- df_workhour[!is.na(df_workhour$workhour) &
+                                           df_workhour$workhour > 60 &
+                                           df_workhour$pekerjaan_utama == "bekerja" | !is.na(df_workhour$workhour) &
+                                           df_workhour$workhour > 168,
+                                           c("year_of_survey", "nim", "nama", "workhour")]
+
+# View the new DataFrame df_workhour_anomaly_10hour
+View(df_workhour_anomaly_60hour)
+# Write the DataFrame to a CSV file
+write.csv(df_workhour_anomaly_60hour, file = "D:/Farras's Onedrive/OneDrive - kimia02/Work/Magang Tracer Study ITB/Tableau/Week 1/Workhour_anomaly_60hour.csv", row.names = FALSE)
+
+## Create a histogram
+hist(df$workhour, main="Histogram of workhour", xlab="Values")
+summary(df$workhour)
+```
+
+```{r Outlier - Salary and Bonus}
+# Total gaji per month
+## Anomaly Data
+### Filter the df_gaji DataFrame based on conditions
+df_gaji <- df
+df_gaji_anomaly <- df_gaji[!is.na(df_gaji$gaji) &
+                            df_gaji$gaji > 80000000 &
+                            df_gaji$pekerjaan_utama == "bekerja" &
+                            (df_gaji$kategori == "nasional" | df_gaji$kategori == "lokal"), 
+                            ]
+
+# View the new DataFrame df_gaji_anomaly
+View(df_gaji_anomaly)
+
+## Create a histogram
+hist(df$gaji, main="Histogram of gaji", xlab="Values")
+summary(df$gaji)
+
+# Bonus Pertahun
+## Create a histogram
+hist(df$bonus, main="Histogram of bonus", xlab="Values")
+summary(df$bonus)
+```
+
+
+```{r Other Category}
+# Aspek Penilaian dari perusahaan
+## Rename the column to importance_other_explanation
+df_cleaned <- df
+colnames(df_cleaned)[colnames(df_cleaned) == "importance_other"] <- "importance_other_explanation"
+## Create the new column importance_other based on importance_other_explanation
+df_cleaned$importance_other <- ifelse(is.na(df_cleaned$importance_other_explanation) | df_cleaned$importance_other_explanation == 0, 0, 1)
+## Replace 0 with NA in importance_other_explanation
+df_cleaned$importance_other_explanation[df_cleaned$importance_other_explanation == 0] <- NA
+View(df_cleaned)
+```
+
+```{r Date Cleaning (need further action DON'T RUN YET)}
+str(df_cleaned$since)
+
+# Ensure that the since column is character type
+df_cleaned$since <- as.character(df_cleaned$since)
+
+# Convert the since column to a date format (mm/dd/yyyy)
+df_cleaned$since <- mdy(df_cleaned$since)
+
+# Format the date to dd-mm-yyyy
+df_cleaned$since <- format(df_cleaned$since, format = "%d-%m-%Y")
+
+# Check the structure of the df_cleaned DataFrame
+str(df_cleaned$since)
+View(df_cleaned)
+```
+
+```{r Kesesuaian Bekerja}
+# Check for rows meeting the specified conditions
+rows_with_anomaly <- df_cleaned[df_cleaned$kesesuaian_bekerja == "ya" &
+                                !(df_cleaned$pekerjaan_utama %in% c("Bekerja", "bekerja dan wiraswasta", "bekerja", "Bekerja dan wiraswasta")), ]
+
+# Subset the rows_with_anomaly DataFrame to include only specific columns
+subset_anomaly <- rows_with_anomaly[, c("year_of_survey", "nim", "nama", "pekerjaan_utama", "kesesuaian_bekerja")]
+
+# View the subset DataFrame
+View(subset_anomaly)
+```
+
+
+```{r Kesesuaian Berwirausaha}
+# Check for rows meeting the specified conditions
+rows_with_anomaly <- df_cleaned[df_cleaned$kesesuaian_wirausaha == "ya" &
+                                !(df_cleaned$pekerjaan_utama %in% c("wirausaha", "bekerja dan wiraswasta", "Wirausaha", "Bekerja dan wiraswasta")), ]
+
+# Subset the rows_with_anomaly DataFrame to include only specific columns
+subset_anomaly <- rows_with_anomaly[, c("year_of_survey", "nim", "nama", "pekerjaan_utama", "kesesuaian_wirausaha")]
+
+# View the subset DataFrame
+View(subset_anomaly)
+```
+
+
+```{r Export the result}
+# Write the DataFrame to a CSV file
+write.csv(df_cleaned, file = "D:/Farras's Onedrive/OneDrive - kimia02/Work/Magang Tracer Study ITB/Tableau/Week 2/cleaned data bagian 3.csv", row.names = FALSE)
+```
+
